@@ -17,18 +17,19 @@ int main() {
     const double Tb = 500;
     const double dx = length / grid;
     double k = 1000;
-
+    double solutionMatrix[grid] = { };
+    double constantTerms[grid] = { };
+    double coeffitientMatrix[grid][grid] = { };
     for (size_t i = 0; i < grid; i++)
     {
         double aw = 0, ae = 0, ap = 0, Sp = 0, Su = 0;
-        if(i == 0)
+        if (i == 0)
         {
             // first cell
             ae = k * area / dx;
             Sp = -2 * k* area / dx;
             Su = 2 * k * area * Ta / dx;
             ap = aw + ae - Sp;
-            std::cout << ap << " T" << i << " = " << ae << " T" << i + 1 << " + " << Su << " Ta" << std::endl;
         }
         else if (i == (grid - 1))
         {
@@ -37,7 +38,6 @@ int main() {
             Sp = -2 * k * area / dx;
             Su = 2 * k * area * Tb / dx;
             ap = aw + ae - Sp;
-            std::cout << ap << " T" << i << " = " << aw << " T" << i - 1 << " + " << Su << " Tb" << std::endl;
         }
         else
         {
@@ -45,8 +45,31 @@ int main() {
             aw = k * area / dx;
             ae = aw;
             ap = aw + ae;
-            std::cout << ap << " T"<<i << " = " << aw << " T"<<i-1 << " + " << ae << " T"<<i+1 <<std::endl;
         }
+        // Fill in coefficient matrix
+        coeffitientMatrix[i][i - 1] = -aw;
+        coeffitientMatrix[i][i] = ap;
+        coeffitientMatrix[i][i + 1] = -ae;
+        // Fill in constant Terms
+        constantTerms[i] = Su;
+    }
+
+    // Print Coefficient Matrix
+    std::cout << "Coefficient Matrix" << std::endl;
+    for (int i = 0; i < grid; i++)
+    {
+        for (int j = 0; j < grid; j++)
+        {
+            std::cout << coeffitientMatrix[i][j] << '\t';
+        }
+        std::cout << std::endl;
+    }
+
+    // Print Constant Terms
+    std::cout << "Constant Terms" << std::endl;
+    for (int i = 0; i < grid; i++)
+    {
+        std::cout << constantTerms[i] << std::endl;
     }
     std::cin >> k;
 
