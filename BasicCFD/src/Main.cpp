@@ -30,6 +30,8 @@ int main() {
             Sp = -2 * k* area / dx;
             Su = 2 * k * area * Ta / dx;
             ap = aw + ae - Sp;
+            // Fill in coefficient matrix
+            coeffitientMatrix[i][i + 1] = -ae;
         }
         else if (i == (grid - 1))
         {
@@ -38,6 +40,8 @@ int main() {
             Sp = -2 * k * area / dx;
             Su = 2 * k * area * Tb / dx;
             ap = aw + ae - Sp;
+            // Fill in coefficient matrix
+            coeffitientMatrix[i][i - 1] = -aw;
         }
         else
         {
@@ -45,11 +49,12 @@ int main() {
             aw = k * area / dx;
             ae = aw;
             ap = aw + ae;
+            // Fill in coefficient matrix
+            coeffitientMatrix[i][i - 1] = -aw;
+            coeffitientMatrix[i][i + 1] = -ae;
         }
         // Fill in coefficient matrix
-        coeffitientMatrix[i][i - 1] = -aw;
         coeffitientMatrix[i][i] = ap;
-        coeffitientMatrix[i][i + 1] = -ae;
         // Fill in constant Terms
         constantTerms[i] = Su;
     }
@@ -71,6 +76,6 @@ int main() {
     {
         std::cout << constantTerms[i] << std::endl;
     }
-    std::cin >> k;
 
+    return 0;
 }
