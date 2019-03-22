@@ -1,6 +1,14 @@
 #include <iostream>
+#include "Main.hpp"
 
 int main() {
+    OneDDiffusionProblem();
+    return 0;
+}
+
+void OneDDiffusionProblem()
+{
+
     /*
                 +                                   +
     Ta = 100C   +-----------------------------------+ Tb = 500C
@@ -76,6 +84,4 @@ int main() {
     {
         std::cout << constantTerms[i] << std::endl;
     }
-
-    return 0;
 }
