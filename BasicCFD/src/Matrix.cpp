@@ -22,7 +22,7 @@ Matrix::~Matrix()
     delete[] m_matrix; // this needs to be done last
 }
 
-bool Matrix::setValue(unsigned int row, unsigned int col, double value)
+bool Matrix::setValue(double value, unsigned int row, unsigned int col)
 {
     if (row > m_rows - 1)
     {
@@ -39,8 +39,9 @@ bool Matrix::setValue(unsigned int row, unsigned int col, double value)
     return true;
 }
 
-void Matrix::print()
+void Matrix::print(std::string title)
 {
+    std::cout << title << std::endl;
     for (unsigned int row = 0; row < m_rows; row++)
     {
         for (unsigned int col = 0; col < m_cols; col++)

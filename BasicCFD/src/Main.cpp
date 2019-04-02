@@ -26,9 +26,10 @@ void OneDDiffusionProblem()
     const double Tb = 500;
     const double dx = length / grid;
     double k = 1000;
-    double solutionMatrix[grid] = { };
-    double constantTerms[grid] = { };
-    double coeffitientMatrix[grid][grid] = { };
+
+    Matrix solutionMatrix = Matrix(grid, 1);
+    Matrix constantTerms = Matrix(grid, 1);
+    Matrix coeffitientMatrix = Matrix(grid, grid);
     for (size_t i = 0; i < grid; i++)
     {
         double aw = 0, ae = 0, ap = 0, Sp = 0, Su = 0;
@@ -40,7 +41,7 @@ void OneDDiffusionProblem()
             Su = 2 * k * area * Ta / dx;
             ap = aw + ae - Sp;
             // Fill in coefficient matrix
-            coeffitientMatrix[i][i + 1] = -ae;
+            coeffitientMatrix.setValue(-ae, i, i + 1);
         }
         else if (i == (grid - 1))
         {
@@ -50,7 +51,7 @@ void OneDDiffusionProblem()
             Su = 2 * k * area * Tb / dx;
             ap = aw + ae - Sp;
             // Fill in coefficient matrix
-            coeffitientMatrix[i][i - 1] = -aw;
+            coeffitientMatrix.setValue(-aw, i, i - 1);
         }
         else
         {
@@ -59,44 +60,20 @@ void OneDDiffusionProblem()
             ae = aw;
             ap = aw + ae;
             // Fill in coefficient matrix
-            coeffitientMatrix[i][i - 1] = -aw;
-            coeffitientMatrix[i][i + 1] = -ae;
+            coeffitientMatrix.setValue(-aw, i, i - 1);
+            coeffitientMatrix.setValue(-ae, i, i + 1);
         }
         // Fill in coefficient matrix
-        coeffitientMatrix[i][i] = ap;
+        coeffitientMatrix.setValue(ap, i, i);
         // Fill in constant Terms
-        constantTerms[i] = Su;
+        constantTerms.setValue(Su, i);
     }
 
     // Print Coefficient Matrix
-    std::cout << "Coefficient Matrix" << std::endl;
-    for (int i = 0; i < grid; i++)
-    {
-        for (int j = 0; j < grid; j++)
-        {
-            std::cout << coeffitientMatrix[i][j] << '\t';
-        }
-        std::cout << std::endl;
-    }
+    coeffitientMatrix.print("Coefficient Matrix");
 
     // Print Constant Terms
-    std::cout << "Constant Terms" << std::endl;
-    for (int i = 0; i < grid; i++)
-    {
-        std::cout << constantTerms[i] << std::endl;
-    }
+    constantTerms.print("Constant Terms");
 
     std::cout << std::endl;
-
-    Matrix mat1 = Matrix(2, 3);
-    mat1.print();
-    mat1.setValue(0, 0, 0.00);
-    mat1.setValue(0, 1, 0.01);
-    mat1.setValue(0, 2, 0.02);
-    mat1.setValue(1, 0, 0.10);
-    mat1.setValue(1, 1, 0.11);
-    mat1.setValue(1, 2, 0.12);
-    mat1.setValue(1, 3, 0.13);
-    mat1.setValue(2, 2, 0.22);
-    mat1.print();
 }
