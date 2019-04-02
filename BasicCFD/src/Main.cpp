@@ -1,5 +1,6 @@
 #include <iostream>
 #include "Main.hpp"
+#include "Matrix.hpp"
 
 int main() {
     OneDDiffusionProblem();
@@ -84,4 +85,18 @@ void OneDDiffusionProblem()
     {
         std::cout << constantTerms[i] << std::endl;
     }
+
+    std::cout << std::endl;
+
+    Matrix mat1 = Matrix(2, 3);
+    mat1.print();
+    mat1.setValue(0, 0, 0.00);
+    mat1.setValue(0, 1, 0.01);
+    mat1.setValue(0, 2, 0.02);
+    mat1.setValue(1, 0, 0.10);
+    mat1.setValue(1, 1, 0.11);
+    mat1.setValue(1, 2, 0.12);
+    mat1.setValue(1, 3, 0.13);
+    mat1.setValue(2, 2, 0.22);
+    mat1.print();
 }
