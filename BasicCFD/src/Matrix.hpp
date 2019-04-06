@@ -17,6 +17,9 @@ public:
     double** getMatrix() { return m_matrix; };
 
     bool setValue(double value, unsigned int row, unsigned int col = 0);
+    void add(Matrix* const input) { addOrSubtract(input, true); };
+    void subtract(Matrix* const input) { addOrSubtract(input, false); };
+    void addOrSubtract(Matrix* const input, const bool add);
     void print(std::string title = "");
 };
 

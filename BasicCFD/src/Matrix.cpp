@@ -6,7 +6,7 @@ Matrix::Matrix(int rows, int cols)
 {
     m_rows = rows;
     m_cols = cols;
-    
+
     m_matrix = new double*[m_rows]; // allocate an array of double pointers — these are our rows
     for (unsigned int i = 0; i < m_rows; ++i)
     {
@@ -37,6 +37,26 @@ bool Matrix::setValue(double value, unsigned int row, unsigned int col)
 
     m_matrix[row][col] = value;
     return true;
+}
+
+void Matrix::addOrSubtract(Matrix* const input, const bool add)
+{
+    if (m_rows != input->getRowSize() && m_cols != input->getColSize())
+    {
+        std::cout << "Matrices can only be added or subtractedif they are of the same order" << std::endl;
+        return;
+    }
+
+    for (unsigned int i = 0; i < m_rows; i++)
+    {
+        for (unsigned int j = 0; j < m_rows; j++)
+        {
+            if(add)
+                m_matrix[i][j] += input->getValue(i, j);
+            else
+                m_matrix[i][j] -= input->getValue(i, j);
+        }
+    }
 }
 
 void Matrix::print(std::string title)
