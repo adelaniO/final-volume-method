@@ -27,9 +27,9 @@ void OneDDiffusionProblem()
     const double dx = length / grid;
     double k = 1000;
 
-    Matrix solutionMatrix = Matrix(grid, 1);
-    Matrix constantTerms = Matrix(grid, 1);
-    Matrix coeffitientMatrix = Matrix(grid, grid);
+    Solver::Matrix solutionMatrix = Solver::Matrix(grid, 1);
+    Solver::Matrix constantTerms = Solver::Matrix(grid, 1);
+    Solver::Matrix coeffitientMatrix = Solver::Matrix(grid, grid);
     for (size_t i = 0; i < grid; i++)
     {
         double aw = 0, ae = 0, ap = 0, Sp = 0, Su = 0;
@@ -76,8 +76,8 @@ void OneDDiffusionProblem()
     constantTerms.print("Constant Terms");
 
     std::cout << std::endl;
-    Matrix mat1 = Matrix(2, 2);
-    Matrix mat2 = Matrix(2, 2);
+    Solver::Matrix mat1 = Solver::Matrix(2, 2);
+    Solver::Matrix mat2 = Solver::Matrix(2, 2);
     mat1.setValue(1, 0, 0);
     mat1.setValue(1, 0, 1);
     mat1.setValue(1, 1, 0);
