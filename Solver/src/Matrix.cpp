@@ -13,8 +13,7 @@ namespace Solver
         m_matrix = new double*[m_rows]; // allocate an array of double pointers — these are our rows
         for (unsigned int i = 0; i < m_rows; ++i)
         {
-            m_matrix[i] = new double[m_cols]; // these are our columns
-            memset(m_matrix[i], 0, m_cols * sizeof(double)); // initialise with zeros
+            m_matrix[i] = new double[m_cols](); // these are our columns initialised with zeros
         }
     }
 
@@ -29,6 +28,7 @@ namespace Solver
     {
         if (row > m_rows - 1)
         {
+            // TODO: Throw a proper error here
             std::cout << "Unable to set Matrix value. Matrix has less than " << row + 1 << " rows" << std::endl;
             return false;
         }
@@ -46,19 +46,39 @@ namespace Solver
     {
         if (m_rows != input->getRowSize() && m_cols != input->getColSize())
         {
-            std::cout << "Matrices can only be added or subtractedif they are of the same order" << std::endl;
+            // TODO: Throw a proper error here
+            std::cout << "Matrices can only be added or subtracted if they are of the same order" << std::endl;
             return;
         }
 
         for (unsigned int i = 0; i < m_rows; i++)
         {
-            for (unsigned int j = 0; j < m_rows; j++)
+            for (unsigned int j = 0; j < m_cols; j++)
             {
                 if (add)
                     m_matrix[i][j] += input->getValue(i, j);
                 else
                     m_matrix[i][j] -= input->getValue(i, j);
             }
+        }
+    }
+
+    void Matrix::dot(Matrix* const input)
+    {
+        if (m_rows != input->getColSize())
+        {
+            // TODO: Throw a proper error here
+            std::cout << "Dot Product is defined only when the number of columns in the first matrix equals the number of rows in the second" << std::endl;
+            return;
+        }
+    }
+
+    void Matrix::multiplyBy(const double input)
+    {
+        for (unsigned int i = 0; i < m_rows; i++)
+        {
+            for (unsigned int j = 0; j < m_cols; j++)
+                m_matrix[i][j] *= input;
         }
     }
 
