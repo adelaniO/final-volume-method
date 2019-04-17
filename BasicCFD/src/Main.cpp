@@ -74,26 +74,4 @@ void OneDDiffusionProblem()
 
     // Print Constant Terms
     constantTerms.print("Constant Terms");
-
-    std::cout << std::endl;
-    Solver::Matrix mat1 = Solver::Matrix(2, 2);
-    Solver::Matrix mat2 = Solver::Matrix(2, 2);
-    mat1.setValue(1, 0, 0);
-    mat1.setValue(1, 0, 1);
-    mat1.setValue(1, 1, 0);
-    mat1.setValue(1, 1, 1);
-
-    mat2.setValue(1, 0, 0);
-    mat2.setValue(1, 0, 1);
-    mat2.setValue(1, 1, 0);
-    mat2.setValue(1, 1, 1);
-
-    mat1.add(&mat2);
-    mat1.print();
-
-    mat1.add(&mat2);
-    mat1.print();
-
-    mat1.subtract(&mat2);
-    mat1.print();
 }

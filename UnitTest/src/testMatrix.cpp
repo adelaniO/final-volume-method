@@ -100,9 +100,53 @@ namespace UnitTest
             Assert::AreEqual(mat1.getValue(1, 2), 28.0);
         }
 
-        TEST_METHOD(MultiplyTwoMatrices)
+        TEST_METHOD(DotMatrices)
         {
+            Solver::Matrix mat1 = Solver::Matrix(2, 3);
+            Solver::Matrix mat2 = Solver::Matrix(3, 1);
+            mat1.setValue(4.0, 0, 0);
+            mat1.setValue(7.0, 0, 1);
+            mat1.setValue(6.0, 0, 2);
+            mat1.setValue(2.0, 1, 0);
+            mat1.setValue(3.0, 1, 1);
+            mat1.setValue(1.0, 1, 2);
 
+            mat2.setValue(8.0, 0, 0);
+            mat2.setValue(5.0, 1, 0);
+            mat2.setValue(9.0, 2, 0);
+
+            Solver::Matrix result;
+            mat1.dot(mat2, &result);
+
+            Assert::AreEqual(result.getRowSize(), 2);
+            Assert::AreEqual(result.getColSize(), 1);
+
+            Assert::AreEqual(result.getValue(0, 0), 121.0);
+            Assert::AreEqual(result.getValue(1, 0), 40.0);
+            
+            mat1.resizeMarix(2, 4);
+            mat2.resizeMarix(4, 1);
+
+            mat1.setValue(2.0, 0, 0);
+            mat1.setValue(3.0, 0, 1);
+            mat1.setValue(5.0, 0, 2);
+            mat1.setValue(1.0, 0, 3);
+            mat1.setValue(4.0, 1, 0);
+            mat1.setValue(6.0, 1, 1);
+            mat1.setValue(0.0, 1, 2);
+            mat1.setValue(7.0, 1, 3);
+            mat2.setValue(3.0, 0, 0);
+            mat2.setValue(4.0, 1, 0);
+            mat2.setValue(2.0, 2, 0);
+            mat2.setValue(9.0, 3, 0);
+
+            mat1.dot(mat2, &result);
+
+            Assert::AreEqual(result.getRowSize(), 2);
+            Assert::AreEqual(result.getColSize(), 1);
+
+            Assert::AreEqual(result.getValue(0, 0), 37.0);
+            Assert::AreEqual(result.getValue(1, 0), 99.0);
         }
 
     };
