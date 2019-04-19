@@ -80,7 +80,7 @@ namespace Solver
         }
     }
 
-    void Matrix::dot(const Matrix& input, Matrix* result) const
+    Matrix Matrix::dot(const Matrix& input) const
     {
         if (m_cols != input.getRowSize())
             throw std::invalid_argument("Dot Product is defined only when the number of columns in the first matrix equals the number of rows in the second");
@@ -88,7 +88,8 @@ namespace Solver
         double tempVal{};
         std::size_t newCols = input.getColSize();
 
-        result->resizeMarix(m_rows, newCols);
+        Matrix result(m_rows, newCols);
+        result.resizeMarix(m_rows, newCols);
         for (std::size_t i = 0; i < m_rows; i++)
         {
             for (std::size_t j = 0; j < newCols; j++)
@@ -97,10 +98,11 @@ namespace Solver
                 {
                     tempVal += getValue(i, k) * input.getValue(k, j);
                 }
-                result->setValue(tempVal, i, j);
+                result.setValue(tempVal, i, j);
                 tempVal = 0;
             }
         }
+        return result;
     }
 
     void Matrix::multiplyBy(const double input)

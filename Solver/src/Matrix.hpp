@@ -28,7 +28,7 @@ namespace Solver
         void subtract(Matrix* const input) { addOrSubtract(input, false); };
         void addOrSubtract(Matrix* const input, const bool add);
         void multiplyBy(const double input);
-        void dot(const Matrix& input, Matrix* result) const;
+        Matrix dot(const Matrix& input) const;
 
         void print(std::string title = "");
     };

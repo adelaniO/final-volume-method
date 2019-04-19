@@ -124,7 +124,7 @@ namespace UnitTest
             mat2.setValue(9.0, 2, 0);
 
             Solver::Matrix result;
-            mat1.dot(mat2, &result);
+            result = mat1.dot(mat2);
 
             Assert::AreEqual(result.getRowSize(), static_cast<std::size_t>(2));
             Assert::AreEqual(result.getColSize(), static_cast<std::size_t>(1));
@@ -148,7 +148,7 @@ namespace UnitTest
             mat2.setValue(2.0, 2, 0);
             mat2.setValue(9.0, 3, 0);
 
-            mat1.dot(mat2, &result);
+            result = mat1.dot(mat2);
 
             Assert::AreEqual(result.getRowSize(), static_cast<std::size_t>(2));
             Assert::AreEqual(result.getColSize(), static_cast<std::size_t>(1));
