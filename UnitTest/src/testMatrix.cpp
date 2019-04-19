@@ -19,6 +19,14 @@ namespace UnitTest
             Assert::AreEqual(mat1.getValue(1, 0), 0.0);
             Assert::AreEqual(mat1.getValue(1, 1), 0.0);
             Assert::AreEqual(mat1.getValue(1, 2), 0.0);
+
+            mat1 = Solver::Matrix(2, 3, {4,6,5,2,3,7});
+            Assert::AreEqual(mat1.getValue(0, 0), 4.0);
+            Assert::AreEqual(mat1.getValue(0, 1), 6.0);
+            Assert::AreEqual(mat1.getValue(0, 2), 5.0);
+            Assert::AreEqual(mat1.getValue(1, 0), 2.0);
+            Assert::AreEqual(mat1.getValue(1, 1), 3.0);
+            Assert::AreEqual(mat1.getValue(1, 2), 7.0);
         }
 
         TEST_METHOD(AddMatrix)
@@ -118,8 +126,8 @@ namespace UnitTest
             Solver::Matrix result;
             mat1.dot(mat2, &result);
 
-            Assert::AreEqual(result.getRowSize(), 2);
-            Assert::AreEqual(result.getColSize(), 1);
+            Assert::AreEqual(result.getRowSize(), static_cast<std::size_t>(2));
+            Assert::AreEqual(result.getColSize(), static_cast<std::size_t>(1));
 
             Assert::AreEqual(result.getValue(0, 0), 121.0);
             Assert::AreEqual(result.getValue(1, 0), 40.0);
@@ -142,8 +150,8 @@ namespace UnitTest
 
             mat1.dot(mat2, &result);
 
-            Assert::AreEqual(result.getRowSize(), 2);
-            Assert::AreEqual(result.getColSize(), 1);
+            Assert::AreEqual(result.getRowSize(), static_cast<std::size_t>(2));
+            Assert::AreEqual(result.getColSize(), static_cast<std::size_t>(1));
 
             Assert::AreEqual(result.getValue(0, 0), 37.0);
             Assert::AreEqual(result.getValue(1, 0), 99.0);
