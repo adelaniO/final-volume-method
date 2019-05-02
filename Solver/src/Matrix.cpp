@@ -1,4 +1,3 @@
-#pragma once
 #include "stdafx.h"
 #include "iostream"
 #include "Matrix.hpp"
@@ -9,29 +8,26 @@ namespace Solver
     {
     }
 
-    Matrix::Matrix(std::size_t rows, std::size_t cols)
-    {
-        init(rows, cols);
-    }
-
-    Matrix::Matrix(std::size_t rows, std::size_t cols, std::vector<double> const & array)
-    {
-        if (array.size() != rows * cols)
-            throw std::invalid_argument("Size of initialising array must equal to the multiple of the row and col parameters.");
-        if (array.size() == 0)
-            throw std::invalid_argument("Size of initialising array must be greater than 0.");
-        m_rows = rows;
-        m_cols = cols;
-        m_matrix = array;
-    }
-
-    void Matrix::init(std::size_t rows, std::size_t cols)
+    Matrix::Matrix(std::size_t rows, std::size_t cols, const std::vector<double> &data)
     {
         m_rows = rows;
         m_cols = cols;
-        m_matrix = std::vector<double>(rows * cols, 0);
+
+        if(data.size() > 0)
+            m_matrix = data;
+        else
+            m_matrix = std::vector<double>(rows * cols, 0);
     }
 
+    double Matrix::rmsMatrixElements()
+    {
+        double square{};
+        // Calculate square.
+        for(const double element : m_matrix)
+            square += std::pow(element, 2);
+
+        return std::sqrt(square / m_matrix.size());
+    }
     std::size_t Matrix::getIndexFromRowAndCol(std::size_t row, std::size_t col) const
     {
         return m_cols * row + col;
@@ -56,16 +52,18 @@ namespace Solver
         return true;
     }
 
-    void Matrix::resizeMarix(std::size_t rows, std::size_t cols)
+    void Matrix::resizeMarix(std::size_t rows, std::size_t cols, std::vector<double> const &data)
     {
         m_rows = rows;
         m_cols = cols;
         m_matrix.resize(rows * cols);
+        if(data.size() > 0)
+            m_matrix = data;
     }
 
-    void Matrix::addOrSubtract(Matrix* const input, const bool add)
+    void Matrix::addOrSubtract(const Matrix &input, const bool add)
     {
-        if (m_rows != input->getRowSize() && m_cols != input->getColSize())
+        if (m_rows != input.getRowSize() && m_cols != input.getColSize())
             throw std::invalid_argument("Matrices can only be added or subtracted if they are of the same order");
 
         for (std::size_t i = 0; i < m_rows; i++)
@@ -73,9 +71,9 @@ namespace Solver
             for (std::size_t j = 0; j < m_cols; j++)
             {
                 if (add)
-                    m_matrix[getIndexFromRowAndCol(i, j)] += input->getValue(i, j);
+                    m_matrix[getIndexFromRowAndCol(i, j)] += input.getValue(i, j);
                 else
-                    m_matrix[getIndexFromRowAndCol(i, j)] -= input->getValue(i, j);
+                    m_matrix[getIndexFromRowAndCol(i, j)] -= input.getValue(i, j);
             }
         }
     }
@@ -105,6 +103,19 @@ namespace Solver
         return result;
     }
 
+    bool Matrix::operator==(const Matrix &other) const
+    {
+        return 
+            m_rows == other.m_rows &&
+            m_cols == other.m_cols &&
+            m_matrix == other.m_matrix;
+    }
+
+    bool Matrix::operator!=(const Matrix &other) const
+    {
+        return !(*this == other);
+    }
+
     void Matrix::multiplyBy(const double input)
     {
         for (std::size_t i = 0; i < m_rows; i++)
@@ -124,5 +135,31 @@ namespace Solver
             std::cout << std::endl;
         }
         std::cout << std::endl;
+    }
+
+    Matrix operator-(const Matrix & lhs, const Matrix & rhs)
+    {
+        Matrix result = lhs;
+        result.subtract(rhs);
+        return result;
+    }
+
+    Matrix operator+(const Matrix & lhs, const Matrix & rhs)
+    {
+        Matrix result = lhs;
+        result.add(rhs);
+        return result;
+    }
+
+    Matrix operator*(const Matrix & lhs, const Matrix & rhs)
+    {
+        return lhs.dot(rhs);
+    }
+
+    Matrix operator*(const Matrix & lhs, const double rhs)
+    {
+        Matrix result = lhs;
+        result.multiplyBy(rhs);
+        return result;
     }
 }
