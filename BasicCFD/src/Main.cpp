@@ -27,7 +27,6 @@ void OneDDiffusionProblem()
     const double dx = length / grid;
     double k = 1000;
 
-    Solver::Matrix solutionMatrix = Solver::Matrix(grid, 1);
     Solver::Matrix constantTerms = Solver::Matrix(grid, 1);
     Solver::Matrix coeffitientMatrix = Solver::Matrix(grid, grid);
     for (size_t i = 0; i < grid; i++)
