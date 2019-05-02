@@ -1,6 +1,15 @@
 #include <iostream>
+#include "Main.hpp"
+#include "Matrix.hpp"
 
 int main() {
+    OneDDiffusionProblem();
+    return 0;
+}
+
+void OneDDiffusionProblem()
+{
+
     /*
                 +                                   +
     Ta = 100C   +-----------------------------------+ Tb = 500C
@@ -18,17 +27,20 @@ int main() {
     const double dx = length / grid;
     double k = 1000;
 
+    Solver::Matrix constantTerms = Solver::Matrix(grid, 1);
+    Solver::Matrix coeffitientMatrix = Solver::Matrix(grid, grid);
     for (size_t i = 0; i < grid; i++)
     {
         double aw = 0, ae = 0, ap = 0, Sp = 0, Su = 0;
-        if(i == 0)
+        if (i == 0)
         {
             // first cell
             ae = k * area / dx;
             Sp = -2 * k* area / dx;
             Su = 2 * k * area * Ta / dx;
             ap = aw + ae - Sp;
-            std::cout << ap << " T" << i << " = " << ae << " T" << i + 1 << " + " << Su << " Ta" << std::endl;
+            // Fill in coefficient matrix
+            coeffitientMatrix.setValue(-ae, i, i + 1);
         }
         else if (i == (grid - 1))
         {
@@ -37,7 +49,8 @@ int main() {
             Sp = -2 * k * area / dx;
             Su = 2 * k * area * Tb / dx;
             ap = aw + ae - Sp;
-            std::cout << ap << " T" << i << " = " << aw << " T" << i - 1 << " + " << Su << " Tb" << std::endl;
+            // Fill in coefficient matrix
+            coeffitientMatrix.setValue(-aw, i, i - 1);
         }
         else
         {
@@ -45,9 +58,19 @@ int main() {
             aw = k * area / dx;
             ae = aw;
             ap = aw + ae;
-            std::cout << ap << " T"<<i << " = " << aw << " T"<<i-1 << " + " << ae << " T"<<i+1 <<std::endl;
+            // Fill in coefficient matrix
+            coeffitientMatrix.setValue(-aw, i, i - 1);
+            coeffitientMatrix.setValue(-ae, i, i + 1);
         }
+        // Fill in coefficient matrix
+        coeffitientMatrix.setValue(ap, i, i);
+        // Fill in constant Terms
+        constantTerms.setValue(Su, i);
     }
-    std::cin >> k;
 
+    // Print Coefficient Matrix
+    coeffitientMatrix.print("Coefficient Matrix");
+
+    // Print Constant Terms
+    constantTerms.print("Constant Terms");
 }
