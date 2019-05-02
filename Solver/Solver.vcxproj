@@ -155,11 +155,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Jacobi.hpp" />
     <ClInclude Include="src\Matrix.hpp" />
     <ClInclude Include="src\stdafx.h" />
     <ClInclude Include="src\targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Jacobi.cpp" />
     <ClCompile Include="src\Matrix.cpp" />
     <ClCompile Include="src\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
