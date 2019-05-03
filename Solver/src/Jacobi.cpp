@@ -21,7 +21,7 @@ namespace Solver
         Matrix T = Matrix(m_A->getRowSize(), m_A->getColSize());
         // Create the constant vector
         Matrix C = Matrix(m_A->getRowSize(), 1);
-        // Populate in iteration matric and constant vector
+        // Populate in iteration matrix and constant vector
         for (std::size_t i = 0; i < m_A->getRowSize(); i++)
         {
             C.setValue(m_B->getValue(i) / m_A->getValue(i, i), i);

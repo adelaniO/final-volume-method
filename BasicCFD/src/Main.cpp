@@ -3,12 +3,6 @@
 #include "Matrix.hpp"
 
 int main() {
-    OneDDiffusionProblem();
-    return 0;
-}
-
-void OneDDiffusionProblem()
-{
 
     /*
                 +                                   +
@@ -19,14 +13,23 @@ void OneDDiffusionProblem()
                              ap*Tp = aw*Tw + ae*Te + Su
     */
 
-    const unsigned int grid = 5;
-    const double length = 0.5;
-    const double area = 0.01;
-    const double Ta = 100;
-    const double Tb = 500;
-    const double dx = length / grid;
+    unsigned int grid = 5;
+    double length = 0.5;
+    double area = 0.01;
+    double Ta = 100;
+    double Tb = 500;
+    double dx = length / grid;
+    double heat = 0;
     double k = 1000;
 
+    OneDDiffusionProblem(grid, k, area, dx, Ta, Tb, heat);
+
+    OneDDiffusionProblem(grid, 0.5, 1, 0.004, 100, 200, 1000000);
+    return 0;
+}
+
+void OneDDiffusionProblem(const unsigned int &grid, double k, const double &area, const double &dx, const double &Ta, const double &Tb, const double &heat)
+{
     Solver::Matrix constantTerms = Solver::Matrix(grid, 1);
     Solver::Matrix coeffitientMatrix = Solver::Matrix(grid, grid);
     for (size_t i = 0; i < grid; i++)
@@ -37,8 +40,7 @@ void OneDDiffusionProblem()
             // first cell
             ae = k * area / dx;
             Sp = -2 * k* area / dx;
-            Su = 2 * k * area * Ta / dx;
-            ap = aw + ae - Sp;
+            Su = (heat * area * dx) + (2 * k * area * Ta / dx);
             // Fill in coefficient matrix
             coeffitientMatrix.setValue(-ae, i, i + 1);
         }
@@ -47,8 +49,7 @@ void OneDDiffusionProblem()
             // last cell
             aw = k * area / dx;
             Sp = -2 * k * area / dx;
-            Su = 2 * k * area * Tb / dx;
-            ap = aw + ae - Sp;
+            Su = (heat * area * dx) + (2 * k * area * Tb / dx);
             // Fill in coefficient matrix
             coeffitientMatrix.setValue(-aw, i, i - 1);
         }
@@ -57,11 +58,14 @@ void OneDDiffusionProblem()
             // inner cells
             aw = k * area / dx;
             ae = aw;
-            ap = aw + ae;
+            Su = heat * area * dx;
             // Fill in coefficient matrix
             coeffitientMatrix.setValue(-aw, i, i - 1);
             coeffitientMatrix.setValue(-ae, i, i + 1);
         }
+
+        ap = aw + ae - Sp;
+
         // Fill in coefficient matrix
         coeffitientMatrix.setValue(ap, i, i);
         // Fill in constant Terms
