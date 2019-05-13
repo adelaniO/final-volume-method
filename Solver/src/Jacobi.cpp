@@ -24,12 +24,12 @@ namespace Solver
         // Populate in iteration matrix and constant vector
         for (std::size_t i = 0; i < m_A->getRowSize(); i++)
         {
-            C.setValue(m_B->getValue(i) / m_A->getValue(i, i), i);
+            C.setValue(relaxationNo * m_B->getValue(i) / m_A->getValue(i, i), i);
             for (std::size_t j = 0; j < m_A->getColSize(); j++)
             {
-                double tempValue = 0;
+                double tempValue{ 1 - relaxationNo };
                 if (i != j)
-                    tempValue = -m_A->getValue(i, j) / m_A->getValue(i, i);
+                    tempValue = -relaxationNo * m_A->getValue(i, j) / m_A->getValue(i, i);
                 T.setValue(tempValue, i, j);
             }
         }
@@ -37,7 +37,7 @@ namespace Solver
         //Solve
         m_numIterations = 0;
         Matrix residualMatrix = Matrix(m_A->getRowSize(), 1);
-        while (m_numIterations < m_maxIterations && m_residual >= m_convergenceCriterion)
+        while (m_numIterations < m_maxIterations)
         {
             //Get new solution vector
             *m_X = T * (*m_X) + C;
@@ -45,6 +45,16 @@ namespace Solver
             residualMatrix = (*m_B) - (*m_A) * (*m_X);
             m_residual = residualMatrix.rmsMatrixElements();
 
+            if (m_residual <= m_convergenceCriterion)
+            {
+                m_converged = true;
+                break;
+            }
+            else if (m_residual >= m_divergenceCriterion || isinf(m_residual))
+            {
+                m_diverged = true;
+                break;
+            }
             m_numIterations++;
         }
     }
