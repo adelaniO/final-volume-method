@@ -19,6 +19,28 @@ namespace Solver
             m_matrix = std::vector<double>(rows * cols, 0);
     }
 
+    bool Matrix::isDiagonallyDominant()
+    {
+        if (m_rows != m_cols)
+            return false;
+
+        // for each row 
+        for (size_t i = 0; i < m_rows; i++)
+        {
+            // for each column, finding sum of each row.
+            double sumOfRow{};
+            for (size_t j = 0; j < m_cols; j++)
+                sumOfRow += std::abs(getValue(i, j));
+            // removing the diagonal element.
+            sumOfRow -= std::abs(getValue(i, i));
+            // checking if diagonal element is less than sum of non-diagonal element. 
+            if (std::abs(getValue(i, i)) < sumOfRow)
+                return false;
+        }
+
+        return true;
+    }
+
     double Matrix::rmsMatrixElements()
     {
         double square{};

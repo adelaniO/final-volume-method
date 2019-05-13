@@ -81,6 +81,30 @@ namespace UnitTest
             Assert::IsTrue(expectedResult == actualResult);
         }
 
+        TEST_METHOD(DiagonallyDominantMatrices)
+        {
+            Solver::Matrix mat1 = Solver::Matrix(3, 3, {
+                     3,-2, 1,
+                     1,-3, 2,
+                    -1, 2, 4
+                });
+            Assert::IsTrue(mat1.isDiagonallyDominant());
+
+            mat1 = Solver::Matrix(3, 3, {
+                    -2, 2, 1,
+                     1, 3, 2,
+                     1,-2, 0
+                });
+            Assert::IsTrue(!mat1.isDiagonallyDominant());
+
+            mat1 = Solver::Matrix(3, 3, {
+                    -4, 2, 1,
+                     1, 6, 2,
+                     1,-2, 5
+                });
+            Assert::IsTrue(mat1.isDiagonallyDominant());
+        }
+
         TEST_METHOD(JacobiSolver)
         {
             Solver::Matrix A = Solver::Matrix(2, 2, { 2, 1, 5, 7 });

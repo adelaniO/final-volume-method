@@ -13,6 +13,8 @@ namespace Solver
         Matrix();
         Matrix(std::size_t rows, std::size_t cols, const std::vector<double> &data = {});
 
+        bool isDiagonallyDominant();
+
         double getValue(std::size_t row, std::size_t col = 0) const { return m_matrix[getIndexFromRowAndCol(row, col)]; };
         double rmsMatrixElements();
         std::size_t getColSize() const { return m_cols; };
