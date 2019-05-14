@@ -1,6 +1,7 @@
 #include <iostream>
 #include "Main.hpp"
 #include "Matrix.hpp"
+#include "Jacobi.hpp"
 
 int main() {
 
@@ -22,9 +23,15 @@ int main() {
     double heat = 0;
     double k = 1000;
 
-    OneDDiffusionProblem(grid, k, area, dx, Ta, Tb, heat);
+    //OneDDiffusionProblem(grid, k, area, dx, Ta, Tb, heat);
+    //OneDDiffusionProblem(5, 0.5, 1, 0.004, 100, 200, 1000000);
+    
+    //OneDConvectionDiffusionProblem(grid, k, area, dx, Ta, Tb, heat, 0, 0);
+    //OneDConvectionDiffusionProblem(5, 0.5, 1, 0.004, 100, 200, 1000000, 0, 0);
+    //OneDConvectionDiffusionProblem(5, 0.1, 1, 0.2, 1, 0, 0, 1, 0.1);
+    OneDConvectionDiffusionProblem(5, 0.1, 1, 1.0/5.0, 1, 0, 0, 1, 2.5);
+    OneDConvectionDiffusionProblem(20, 0.1, 1, 1.0/20.0, 1, 0, 0, 1, 2.5);
 
-    OneDDiffusionProblem(grid, 0.5, 1, 0.004, 100, 200, 1000000);
     return 0;
 }
 
@@ -77,4 +84,62 @@ void OneDDiffusionProblem(const unsigned int &grid, double k, const double &area
 
     // Print Constant Terms
     constantTerms.print("Constant Terms");
+}
+
+void OneDConvectionDiffusionProblem(const unsigned int &grid, double k, const double &area, const double &dx, const double &Ta, const double &Tb, const double &heat,
+    const double &density, const double &flowRate)
+{
+    Solver::Matrix solutionVector = Solver::Matrix(grid, 1);
+    Solver::Matrix constantVector = Solver::Matrix(grid, 1);
+    Solver::Matrix coeffitientMatrix = Solver::Matrix(grid, grid);
+    for (size_t i = 0; i < grid; i++)
+    {
+        double aw{}, ae{}, ap{}, Sp{}, Su{};
+        const double F = density * flowRate * area;
+        const double D = k * area / dx;
+        if (i == 0)
+        {
+            // first cell
+            ae = D - F / 2;
+            Sp = -(2 * D + F);
+            Su = (heat * area * dx) + ((2 * D + F) * Ta);
+            // Fill in coefficient matrix
+            coeffitientMatrix.setValue(-ae, i, i + 1);
+        }
+        else if (i == (grid - 1))
+        {
+            // last cell
+            aw = D + F / 2;
+            Sp = -(2 * D - F);
+            Su = (heat * area * dx) + ((2 * D - F) * Tb);
+            // Fill in coefficient matrix
+            coeffitientMatrix.setValue(-aw, i, i - 1);
+        }
+        else
+        {
+            // inner cells
+            aw = D + F / 2;
+            ae = D - F / 2;
+            Su = heat * area * dx;
+            // Fill in coefficient matrix
+            coeffitientMatrix.setValue(-aw, i, i - 1);
+            coeffitientMatrix.setValue(-ae, i, i + 1);
+        }
+
+        ap = aw + ae - Sp;
+
+        // Fill in coefficient matrix
+        coeffitientMatrix.setValue(ap, i, i);
+        // Fill in constant Terms
+        constantVector.setValue(Su, i);
+    }
+
+    // Solve
+    Solver::Jacobi linearSolver(&coeffitientMatrix, &constantVector, &solutionVector, 10000, 1e-5);
+    linearSolver.setRelaxation(0.1);
+    linearSolver.solve();
+    // Print all matrices and vectors
+    coeffitientMatrix.print("Coefficient Matrix");
+    constantVector.print("Constant Terms");
+    solutionVector.print("Solution Vector");
 }
