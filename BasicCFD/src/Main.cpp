@@ -94,32 +94,37 @@ void OneDConvectionDiffusionProblem(const unsigned int &grid, double k, const do
     Solver::Matrix coeffitientMatrix = Solver::Matrix(grid, grid);
     for (size_t i = 0; i < grid; i++)
     {
+        // F is the convective mass flux per unit area
+        // D is the diffusion conductance at cell faces
+        // e and w subscript represent the east and west nodes in adjacent cell
         double aw{}, ae{}, ap{}, Sp{}, Su{};
-        const double F = density * flowRate * area;
-        const double D = k * area / dx;
+        const double Fe = density * flowRate * area; 
+        const double Fw = Fe;
+        const double De = k * area / dx;
+        const double Dw = De;
         if (i == 0)
         {
             // first cell
-            ae = D - F / 2;
-            Sp = -(2 * D + F);
-            Su = (heat * area * dx) + ((2 * D + F) * Ta);
+            ae = De - Fe / 2;
+            Sp = -(2 * Dw + Fe);
+            Su = (heat * area * dx) + ((2 * Dw + Fw) * Ta); // Fw = F at inlet (Fa)
             // Fill in coefficient matrix
             coeffitientMatrix.setValue(-ae, i, i + 1);
         }
         else if (i == (grid - 1))
         {
             // last cell
-            aw = D + F / 2;
-            Sp = -(2 * D - F);
-            Su = (heat * area * dx) + ((2 * D - F) * Tb);
+            aw = Dw + Fw / 2;
+            Sp = -(2 * De - Fw);
+            Su = (heat * area * dx) + ((2 * De - Fe) * Tb); // Fe = F at outlet (Fb)
             // Fill in coefficient matrix
             coeffitientMatrix.setValue(-aw, i, i - 1);
         }
         else
         {
             // inner cells
-            aw = D + F / 2;
-            ae = D - F / 2;
+            aw = Dw + Fw / 2;
+            ae = De - Fe / 2;
             Su = heat * area * dx;
             // Fill in coefficient matrix
             coeffitientMatrix.setValue(-aw, i, i - 1);
